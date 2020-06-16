@@ -1,0 +1,16 @@
+# comando para rodar
+# docker-compose -f docker-compose.prod.yml up
+# Comando para buildar prod
+# docker-compose -f docker-compose.prod.yml build
+
+version: '3.7'
+
+services:
+
+  frontend-prod:
+    container_name: barbershop_frontend-prod
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - '1337:80'
