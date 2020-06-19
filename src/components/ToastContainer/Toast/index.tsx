@@ -12,6 +12,8 @@ import { Container } from './styles';
 
 interface ToastProps {
   message: ToastMessage;
+  // Ele vai receber uma nova propriedade chamada style
+  style: object;
 }
 
 const icons = {
@@ -20,7 +22,8 @@ const icons = {
   success: <FiCheckCircle size={24} />,
 };
 
-const Toast: React.FC<ToastProps> = ({ message }) => {
+// Precisamos receber o style
+const Toast: React.FC<ToastProps> = ({ message, style }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
@@ -33,8 +36,13 @@ const Toast: React.FC<ToastProps> = ({ message }) => {
     };
   }, [removeToast, message.id]);
 
+  // E vamos repassar pro Container com uma propriedade style
   return (
-    <Container type={message.type} hasDescription={!!message.description}>
+    <Container
+      type={message.type}
+      hasDescription={!!message.description}
+      style={style}
+    >
       {icons[message.type || 'info']}
 
       <div>
