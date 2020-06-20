@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
           <img src={logoImg} alt="Barbershop" />
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Faça seu login</h1>
+            <h1>Login</h1>
 
             <Input name="email" icon={FiMail} placeholder="E-mail" />
 
@@ -88,7 +88,7 @@ const SignIn: React.FC = () => {
 
             <Button type="submit">Enter</Button>
 
-            <Link to="forgot">Forgot my password</Link>
+            <Link to="/forgot-password">Forgot my password</Link>
           </Form>
 
           <Link to="/signup">
