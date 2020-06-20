@@ -34,7 +34,6 @@ const Toast: React.FC<ToastProps> = ({ message, style }) => {
     };
   }, [removeToast, message.id]);
 
-  // E vamos repassar pro Container com uma propriedade style
   return (
     <Container
       type={message.type}
