@@ -2,11 +2,17 @@ import React, { ButtonHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+// Vamos dizer que ele recebe todas as propriedades do botão tradicional
+// mais as seguintes propriedades. (podemos fazer isso com o &)
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  loading?: boolean;
+};
 
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => (
+// E agora usaremos o loading, se ele existir mostraremos a mensagem loading
+// se nao mostraremos o children
+const Button: React.FC<ButtonProps> = ({ children, loading, ...rest }) => (
   <Container type="button" {...rest}>
-    {children}
+    {loading ? 'Loading...' : children}
   </Container>
 );
 

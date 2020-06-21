@@ -1,4 +1,5 @@
-import React, { useCallback, useRef } from 'react';
+// Também importaremos o useState
+import React, { useCallback, useRef, useState } from 'react';
 import { FiLogIn, FiMail } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -14,12 +15,15 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Content, Background, AnimationContainer } from './styles';
+import api from '../../services/api';
 
 interface ForgotPasswordFormData {
   email: string;
 }
 
 const ForgotPassword: React.FC = () => {
+  // Para o loading faremos um estado
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
@@ -28,6 +32,9 @@ const ForgotPassword: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: ForgotPasswordFormData) => {
       try {
+        // no começo da requisição colocaremos o laoding
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -41,6 +48,14 @@ const ForgotPassword: React.FC = () => {
         });
 
         // recuperação se nha
+        await api.post('/password/forgot', { email: data.email });
+
+        // Adicionando toast
+        addToast({
+          type: 'success',
+          title: 'Password Recovery E-mail sent',
+          description: 'An e-mail to recover your password was sent.',
+        });
 
         // history.push('/dashboard');
       } catch (err) {
@@ -56,11 +71,15 @@ const ForgotPassword: React.FC = () => {
           description:
             'An error has occured when you tried to recovery your password, please check your credentials.',
         });
+        // E colocaremos no finally para trocar o loading pra false
+      } finally {
+        setLoading(false);
       }
     },
     [addToast, history]
   );
 
+  // E vamos passar pro nosso componente de botão uma propriedade chamada loading
   return (
     <Container>
       <Content>
@@ -72,7 +91,9 @@ const ForgotPassword: React.FC = () => {
 
             <Input name="email" icon={FiMail} placeholder="E-mail" />
 
-            <Button type="submit">Recovery</Button>
+            <Button loading={loading} type="submit">
+              Recovery
+            </Button>
           </Form>
 
           <Link to="/signin">
