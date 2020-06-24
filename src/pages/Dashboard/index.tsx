@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FiPower, FiClock } from 'react-icons/fi';
 import {
@@ -9,6 +9,8 @@ import {
   Content,
   Schedule,
   NextAppointment,
+  Section,
+  Appointment,
   Calendar,
 } from './styles';
 
@@ -16,11 +18,10 @@ import logoImg from '../../assets/logo.svg';
 import { useAuth } from '../../hooks/auth';
 
 const Dashboard: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const { signOut, user } = useAuth();
 
-  // O Content será exibido o conteúdo abaixo do Header
-  // O Schedule sao os agendamentos a esquerda
-  // E o calendar é o pequeno calendário a direita que será feito a posteriori
   return (
     <Container>
       <Header>
@@ -68,6 +69,62 @@ const Dashboard: React.FC = () => {
               </span>
             </div>
           </NextAppointment>
+
+          <Section>
+            <strong>Manhã</strong>
+
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/32747713?s=460&u=cf48f7d4525ec7fece84e3251c5837d45bc81115&v=4"
+                  alt="Phillippe Rocha"
+                />
+
+                <strong>Phillippe Rocha</strong>
+              </div>
+            </Appointment>
+
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/32747713?s=460&u=cf48f7d4525ec7fece84e3251c5837d45bc81115&v=4"
+                  alt="Phillippe Rocha"
+                />
+
+                <strong>Phillippe Rocha</strong>
+              </div>
+            </Appointment>
+          </Section>
+
+          <Section>
+            <strong>Tarde</strong>
+
+            <Appointment>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+
+              <div>
+                <img
+                  src="https://avatars2.githubusercontent.com/u/32747713?s=460&u=cf48f7d4525ec7fece84e3251c5837d45bc81115&v=4"
+                  alt="Phillippe Rocha"
+                />
+
+                <strong>Phillippe Rocha</strong>
+              </div>
+            </Appointment>
+          </Section>
         </Schedule>
 
         <Calendar />
