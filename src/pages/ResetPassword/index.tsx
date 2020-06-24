@@ -3,9 +3,8 @@ import { FiLogIn, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
-import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -15,6 +14,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Content, Background, AnimationContainer } from './styles';
+import api from '../../services/api';
 
 interface ResetPasswordFormData {
   password: string;
@@ -25,7 +25,9 @@ const ResetPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
+
   const history = useHistory();
+  const location = useLocation();
 
   const handleSubmit = useCallback(
     async (data: ResetPasswordFormData) => {
@@ -38,6 +40,19 @@ const ResetPassword: React.FC = () => {
             [Yup.ref('password')],
             'Passwords must match'
           ),
+        });
+
+        const { password, password_confirmation } = data;
+        const token = new URLSearchParams(location.search).get('token');
+
+        if (!token) {
+          throw new Error();
+        }
+
+        await api.post('/password/reset', {
+          password,
+          password_confirmation,
+          token,
         });
 
         await schema.validate(data, {
@@ -60,7 +75,7 @@ const ResetPassword: React.FC = () => {
         });
       }
     },
-    [addToast, history]
+    [addToast, history, location]
   );
 
   return (
