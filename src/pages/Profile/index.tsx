@@ -19,7 +19,9 @@ import { useAuth } from '../../hooks/auth';
 interface ProfileFormData {
   name: string;
   email: string;
+  old_password: string;
   password: string;
+  password_confirmation: string;
 }
 
 const Profile: React.FC = () => {
@@ -39,21 +41,60 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .required('E-mail is mandatory')
             .email('Type an valid e-mail'),
-          password: Yup.string().min(6, 'At least 6 digits'),
+
+          old_password: Yup.string(),
+
+          password: Yup.string().when('old_password', {
+            is: (val) => !!val.length,
+
+            then: Yup.string().required().min(6),
+
+            otherwirse: Yup.string(),
+          }),
+
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: (val) => !!val.length,
+              then: Yup.string().required().min(6),
+              otherwirse: Yup.string(),
+            })
+            .oneOf([Yup.ref('password')], 'Password does not match'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
+
+        const formData = {
+          name,
+          email,
+
+          ...(old_password
+            ? {
+                old_password,
+                password,
+                password_confirmation,
+              }
+            : {}),
+        };
+
+        const response = await api.put('/profile', formData);
+
+        updateUser(response.data);
 
         history.push('/');
 
         addToast({
           type: 'success',
-          title: 'Registration Succeed!',
-          description: 'You can login now.',
+          title: 'Profile Updated!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -64,13 +105,14 @@ const Profile: React.FC = () => {
         }
         addToast({
           type: 'error',
-          title: 'Registration Error',
+          title: 'Error on updating profile',
           description:
-            'An error has occured when you tried to sign up, please try again.',
+            'An error has occured when you tried to update your profile, please try again.',
         });
       }
     },
-    [addToast, history]
+
+    [addToast, history, updateUser]
   );
 
   const handleAvatarChange = useCallback(
