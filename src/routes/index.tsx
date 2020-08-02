@@ -11,6 +11,8 @@ import ResetPassword from '../pages/ResetPassword';
 import Dashboard from '../pages/Dashboard';
 import Profile from '../pages/Profile';
 
+import { WebSocketProvider } from '../hooks/websocket';
+
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
@@ -18,8 +20,10 @@ const Routes: React.FC = () => (
     <Route path="/forgot-password" component={ForgotPassword} />
     <Route path="/reset-password" component={ResetPassword} />
 
-    <Route path="/profile" component={Profile} isPrivate />
-    <Route path="/dashboard" component={Dashboard} isPrivate />
+    <WebSocketProvider>
+      <Route path="/profile" component={Profile} isPrivate />
+      <Route path="/dashboard" component={Dashboard} isPrivate />
+    </WebSocketProvider>
   </Switch>
 );
 
